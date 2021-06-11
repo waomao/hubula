@@ -5,7 +5,7 @@ Go语言网站项目
 
 V0.0.1 项目基础目录结构来源于[waomao/goweb-directory](https://github.com/waomao/goweb-directory)
 
-V0.0.2 Hello, World 来源于[waomao/goweb-demo](https://github.com/waomao/goweb-demo)
+V0.0.1.1 Hello, World 来源于[waomao/goweb-demo](https://github.com/waomao/goweb-demo)
 
 
 
