@@ -1,0 +1,40 @@
+{
+  "HTTP服务地址": "IP地址",
+  "host1": "10.45.151.75",
+
+  "HTTP服务端口": "监听端口",
+  "port1": 8080,
+
+  "MySQL数据库配置": "从数据库中读取信息",
+  "dbConfig": [{
+    "host":"127.0.0.1",
+    "port" : 3306,
+    "user" : "root",
+    "password" : "123456",
+    "database" : "waimai",
+    "charset":"utf8",
+    "isRunning": true
+  },
+    {}
+  ],
+
+  "redis配置": "从数据库中读取信息",
+  "rdsConfig": [{
+    "host":"127.0.0.1",
+    "port" : 6379,
+    "user" : "",
+    "pwd" : "",
+    "isRunning": true
+  },
+    {}
+  ],
+
+  "rabbitmqConfig": {
+    "host":"10.45.151.75",
+    "port" : 5672,
+    "vhost" : "/",
+    "user" : "remote",
+    "passwd" : "tx_1234abc"
+  }
+
+}

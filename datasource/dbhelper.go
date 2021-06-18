@@ -36,11 +36,17 @@ func InstanceDbMaster() *xorm.Engine {
 	return NewDbMaster()
 }
 
+
 //NewDbMaster 实例化xorm数据库的操作引擎 这个方法是每一次都会实例化一个
 func NewDbMaster() *xorm.Engine {
+	err := conf.InitConfig("configs/config.json")
+	if err != nil {
+		fmt.Print("读取json错误")
+	}
+
 	sourcename := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8",
 		conf.DbMaster.User,
-		conf.DbMaster.Pwd,
+		conf.DbMaster.Password,
 		conf.DbMaster.Host,
 		conf.DbMaster.Port,
 		conf.DbMaster.Database)
