@@ -12,7 +12,7 @@ import (
 //IndexController s
 type IndexController struct {
 	Ctx         iris.Context
-	ServiceUser services.UserService
+	ServiceUser services.ADemoService
 }
 
 //Get http://localhost:8080/

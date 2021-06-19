@@ -1,104 +1,118 @@
 package conf
 
-import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-)
+import "time"
 
-//配置初始化包
+//配置文件结构体
 
-//Httpconf 服务地址服务端口
-type Httpconf struct {
-	Host string `json:"host1"`
-	Port int    `json:"port1"`
+type Config struct {
+	Title    string
+	Runmode string
+	CustomLogger bool
+	Password_salt string
+	Aes_key string
+	Stage    map[string]stage `toml:"stage"`
+	CookieSession cookieSession
+	App      app
+	Webvar webvar
+	DB       map[string]mysql `toml:"mysql"`
+	Redis    map[string]redis
+	Releases releases
+	Company  Company
+	Song    []song
 }
 
-//DriverName 数据库类型
-const DriverName = "mysql"
-
-//DbConfig 连接数据库参数的结构体
-type DbConfig struct {
-	Host      string `json:"host"`
-	Port      int    `json:"port"`
-	User      string `json:"user"`
-	Password  string `json:"password"`
-	Database  string `json:"database"`
-	Charset   string `json:"charset"`
-	IsRunning bool   `json:"isRunning"` //状态 是否正常运行
+type stage struct {
+	Admin_load bool
+	Http string
 }
 
-//RdsConfig redis连接参数结构体
-type RdsConfig struct {
-	Host      string `json:"host"`
-	Port      int    `json:"port"`
-	User      string `json:"user"`
-	Pwd       string `json:"pwd"`
-	IsRunning bool   `json:"isRunning"` // 是否正常运行
+type cookieSession struct {
+	Sessionon bool
+	Session_prefix string
+	Session_name string
 }
 
-//Amqp ss
-type Amqp struct {
-	Host   string `json:"host"`
-	Port   int    `json:"port"`
-	Vhost  string `json:"vhost"`
-	User   string `json:"user"`
-	Passwd string `json:"passwd"`
+type app struct {
+	Name string
+	Owner string
+	Author  string
+	Release time.Time
+	Port int
+	Org     string `toml:"organization"`
+	Mark    string
 }
 
-//读取的配置文件解析到这里
-type baseConfig struct {
-	Httpconf
-	//DbMasterList 系统中所有mysql主库
-	DbMasterList []DbConfig `json:"dbConfig"`
-	//RdsCacheList 系统中用到的所有redis缓存资源
-	RdsCacheList []RdsConfig `json:"rdsConfig"`
-	Amqp         `json:"rabbitmqConfig"`
+type webvar struct {
+	Views  string
 }
 
-var (
-	HttpConfig *Httpconf
-	//DbMaster1 取出第一个配置结构
-	DbMaster *DbConfig
-
-	//RdsCache1 拿到配置参数
-	RdsCache  *RdsConfig
-	AmqpConfig *Amqp
-)
-
-//InitConfig 传入文件名
-func InitConfig(filename string) (err error) {
-	var (
-		content []byte
-		conf    baseConfig
-	)
-	//读取文件
-	if content, err = ioutil.ReadFile(filename); err != nil {
-		fmt.Println(err)
-		return
-	}
-	//Json Unmarshal：将json字符串解码到相应的数据结构
-	if err = json.Unmarshal(content, &conf); err != nil {
-		fmt.Println(err)
-		return
-	}
-	//return &conf
-	//fmt.Printf("%+v", conf)
-	HttpConfig = &conf.Httpconf
-	//root:root@tcp(127.0.0.1:3306)/lottery?charset=utf-8
-	DbMaster = &conf.DbMasterList[0]
-
-	//RdsCache 拿到配置参数
-	RdsCache = &conf.RdsCacheList[0]
-	AmqpConfig = &conf.Amqp
-	return
+type mysql struct {
+	//数据库类型，默认 MYSQL
+	DriverName string
+	//主机ip
+	Host string
+	//端口，默认 3306
+	Port int
+	//数据库登录帐号
+	User string
+	//登录密码
+	Password string
+	//数据库名
+	Database string
+	//向服务器请求连接所使用的字符集，默认：无
+	Charset  string
+	//MySQL的时区设置
+	Loc string
+	//显示sql
+	ShowSql  bool
+	//日志级别
+	LogLevel string
+	//最大空闲数
+	MaxIdleConns int
+	//最大连接数
+	MaxOpenConns int
+	//状态 是否启用
+	IsRunning bool
+	//查询结果是否自动解析为时间
+	ParseTime       bool
+	////SetConnMaxLifetime(time.Second * 500) //设置连接超时500秒
+	//ConnMaxLifetime int
+	////是否启用 SSL 连接模式，默认：MySqlSslMode.None
+	//SslMode         string
 }
 
-/*用法
-err := conf.InitConfig("E:/go_code/src/waomao.com/web/config.json")
-	if err != nil {
-		return
-	}
+type redis struct {
+	Host string
+	Port int
+}
 
-	fmt.Println(conf.DbMaster1.User)
-*/
+type releases struct {
+	Release []string
+	Tags    [][]interface{}
+}
+
+type Company struct {
+	Name   string
+	Detail detail
+}
+
+type detail struct {
+	Type string
+	Addr string
+	ICP  string
+}
+
+type song struct {
+	Name string
+	Dur  duration `toml:"duration"`
+}
+
+type duration struct {
+	time.Duration
+}
+
+func (d *duration) UnmarshalText(text []byte) error {
+	var err error
+	d.Duration, err = time.ParseDuration(string(text))
+	return err
+}

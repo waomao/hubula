@@ -10,7 +10,7 @@ import (
 // Configure 和 bootstrap 里定义的一样
 func Configure(b *bootstrap.Bootstrapper) {
 	//主要是把indexcontrollers放进去 里面定义了很多service
-	userService := services.NewUserService()
+	userService := services.NewADemoService()
 
 
 	//用mvc创建一个新的路径

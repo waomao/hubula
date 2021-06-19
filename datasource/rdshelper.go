@@ -74,7 +74,7 @@ func NewCache() *RedisConn {
 	//连接池
 	pool := redis.Pool{
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", fmt.Sprintf("%s:%d", conf.RdsCache.Host, conf.RdsCache.Port))
+			c, err := redis.Dial("tcp", fmt.Sprintf("%s:%d", conf.Configs().Redis["slave"].Host, conf.Configs().Redis["slave"].Port))
 			if err != nil {
 				log.Fatal("rdshelper.NewCache Dial error ", err)
 				return nil, err
