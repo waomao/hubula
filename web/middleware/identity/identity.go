@@ -1,15 +1,14 @@
 package identity
 
 import (
+	"github.com/kataras/iris/v12"
 	"github.com/waomao/hubula/bootstrap"
 	"time"
-
-	"github.com/kataras/iris/v12"
 )
 
 // New returns a new handler which adds some headers and view data
 // describing the application, i.e the owner, the startup time.
-func New(b *bootstrap.Bootstrapper) iris.Handler {
+func New(b * bootstrap.Bootstrapper) iris.Handler {
 	return func(ctx iris.Context) {
 		// response headers
 		ctx.Header("App-Name", b.AppName)
@@ -24,7 +23,6 @@ func New(b *bootstrap.Bootstrapper) iris.Handler {
 		ctx.Next()
 	}
 }
-
 // Configure creates a new identity middleware and registers that to the app.
 func Configure(b *bootstrap.Bootstrapper) {
 	h := New(b)

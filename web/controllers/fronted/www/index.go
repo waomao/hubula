@@ -17,5 +17,5 @@ type IndexController struct {
 //Get http://localhost:8080/
 func (c *IndexController) Get() string {
 	c.Ctx.Header("Content-Type", "text/html")
-	return "welcome to <a href='http://localhost:8080/'>网站DEMO</a>"
+	return "welcome to <a href='http://localhost:8080/demo'>网站DEMO</a>"
 }

@@ -1,0 +1,17 @@
+{{ define "fronted/pc/demo/gaiandchu-head" }}
+    <title>{{.Title}} - demo</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+    </style>
+{{ end }}
+<a href='http://localhost:8080/demo'>网站DEMO</a>
+<a href='http://localhost:8080/demo/chaandcha'>DEMO插入和查询</a>
+<div style="text-align: center;font-size: 22px;height: auto;padding-top: 50px;">
+    数据库修改和删除</br>
+
+    修改ID{{.xiugaiid}}数据{{.xiugai}} <hr>
+    删除ID{{.shanchuid}}数据{{.shanchu}} 功能慎重使用
+</div>
+<a href='http://localhost:8080/demo/ruansc'>软删除（回收箱）</a>
