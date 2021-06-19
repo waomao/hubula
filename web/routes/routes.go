@@ -4,7 +4,7 @@ import (
 	"github.com/kataras/iris/v12/mvc"
 	"github.com/waomao/hubula/bootstrap"
 	"github.com/waomao/hubula/services"
-	"github.com/waomao/hubula/web/controllers"
+	"github.com/waomao/hubula/web/controllers/fronted/www"
 )
 
 // Configure 和 bootstrap 里定义的一样
@@ -18,5 +18,5 @@ func Configure(b *bootstrap.Bootstrapper) {
 	//把 Service 都注册进去
 	index.Register(userService)
 	//路径发给Handle
-	index.Handle(new(controllers.IndexController))
+	index.Handle(new(www.IndexController))
 }

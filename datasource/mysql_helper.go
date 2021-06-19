@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kataras/golog"
 	"github.com/waomao/hubula/conf"
+	"github.com/waomao/hubula/models"
 	"github.com/xormplus/xorm"
 	"log"
 	"sync"
@@ -111,12 +112,12 @@ func settings(engine *xorm.Engine, mors string) {
 
 	//xorm reverse mysql root:root@tcp(127.0.0.1:3306)/hubula?charset=utf8mb4 templates/goxorm
 	//同步创建数据表
-	//err := engine.Sync2(
-	//	new(models.ADemo))
-	//
-	//if err != nil {
-	//	panic(err.Error())
-	//}
+	err := engine.Sync2(
+		new(models.ADemo))
+
+	if err != nil {
+		panic(err.Error())
+	}
 
 	//调试用的。展示每一条调试语句调试时间
 	engine.ShowSQL(conf.Configs().DB[mors].ShowSql)

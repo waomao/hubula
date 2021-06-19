@@ -7,19 +7,19 @@ import (
 
 var (
 	//IndexPath 前台模板路径
-	MubanIndexPath = "fronted/"
+	MubanIndexPath = "fronted"
 
 	//AdminPath 后台模板路径
-	MubanAdminPath = "backend/"
+	MubanAdminPath = "backend"
 
 	//PcPath PC模板路径
-	PcPath = "pc/"
+	PcPath = "pc"
 
 	//WapPath WAP模板路径
-	WapPath = "wap/"
+	WapPath = "wap"
 
 	//AutoPath AUTO模板路径
-	AutoPath = "auto/"
+	AutoPath = "auto"
 
 	//RunningCrontabService 是否需要启动全局计划任务服务
 	RunningCrontabService = false
