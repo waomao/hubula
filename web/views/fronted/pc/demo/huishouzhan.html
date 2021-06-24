@@ -1,0 +1,82 @@
+{{ define "fronted/pc/demo/huishouzhan-head" }}
+    <title>{{.Title}} - demo</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+
+        #page {
+            background-color: #F5F5F6;
+            margin: 30px 0 0;
+            padding-left: 0;
+            font: 14px arial;
+            white-space: nowrap;
+        }
+
+        .page-inner {
+            padding: 14px 0 14px 150px;
+        }
+
+        #page .n {
+            width: 80px;
+            padding: 0;
+            line-height: 36px;
+        }
+
+        #page a, #page strong {
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            border: 0;
+            border-radius: 6px;
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: text-bottom;
+            text-decoration: none;
+            overflow: hidden;
+            margin-right: 12px;
+            background: #fff;
+        }
+
+        #page a {
+            background-color: #fff;
+            color: #3951B3;
+            cursor: pointer;
+        }
+
+        #page a:hover{
+            text-decoration:none;
+            background: #4E6EF2;
+            color: #fff;
+        }
+
+        #page .page-inner strong .pc{
+            background: #4E6EF2;
+            color: #fff;
+            display: block;
+        }
+
+        a:visited {
+            color: #531b66;
+            text-decoration: none;
+        }
+
+        .p:after{content:"";clear:both;display:block}
+
+    </style>
+{{ end }}
+
+<hr>
+hubula为您找到相关结果约{{.pagings.TotalCount}}个
+{{ range $k,$v:=.pagings.Data }}
+    <li>
+        <a href="">{{$v.Id}}-{{$v}}</a>--<a href="edit?id={{$v.Id}}">编辑</a>--<a href="del?id={{$v.Id}}">删除</a>
+    </li>
+{{end}}
+
+<div id="page">
+    {{.pagings.Str}}
+</div>
+
+<strong><span><i></i></span><span class="pc">当前页</span></strong>

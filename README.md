@@ -26,6 +26,7 @@ go-sql-driver/mysql v1.6.0
 
 
 ## 进程
+V0.0.2 完整的demo
 
 V0.0.1.5 简单的数据库操作
 

@@ -1,0 +1,127 @@
+{{ define "fronted/pc/demo/chaxun-head" }}
+    <title>{{.Title}} - demo</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+
+        #page {
+            background-color: #F5F5F6;
+            margin: 30px 0 0;
+            padding-left: 0;
+            font: 14px arial;
+            white-space: nowrap;
+        }
+
+        .page-inner {
+            padding: 14px 0 14px 150px;
+        }
+
+        #page .n {
+            width: 80px;
+            padding: 0;
+            line-height: 36px;
+        }
+
+        #page a, #page strong {
+            width: 36px;
+            height: 36px;
+            line-height: 36px;
+            text-align: center;
+            border: 0;
+            border-radius: 6px;
+            font-size: 14px;
+            display: inline-block;
+            vertical-align: text-bottom;
+            text-decoration: none;
+            overflow: hidden;
+            margin-right: 12px;
+            background: #fff;
+        }
+
+        #page a {
+            background-color: #fff;
+            color: #3951B3;
+            cursor: pointer;
+        }
+
+        #page a:hover{
+            text-decoration:none;
+            background: #4E6EF2;
+            color: #fff;
+        }
+
+        #page .page-inner strong .pc{
+            background: #4E6EF2;
+            color: #fff;
+            display: block;
+        }
+
+        a:visited {
+            color: #531b66;
+            text-decoration: none;
+        }
+
+        .p:after{content:"";clear:both;display:block}
+
+    </style>
+{{ end }}
+<div style="text-align: center;font-size: 22px;height: 240px;padding: 0;">
+    <div class="waikuang">
+        <div class="biaodan">
+            <form  id="reg" action="/demo/chaxun" method="get">
+                <div class="shang">
+                    <table class="table table-hover table-bordered">
+                        <tr>
+                            查询
+                        </tr>
+                        <tr>
+                            <th>登录帐号</th>
+                            <td><input type="text" name="LoginName" class="form-control" id="LoginName" value="{{.sousuo.loginName}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>用户姓名</th>
+                            <td><input type="text" name="Vsername" class="form-control" id="Vsername" value="{{.sousuo.vsername}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>手机号</th>
+                            <td><input type="text" name="Mobile" class="form-control" id="Mobile" value="{{.sousuo.mobile}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>电子邮箱</th>
+                            <td><input type="text" name="Email" class="form-control" id="Email" value="{{.sousuo.email}}" /></td>
+                        </tr>
+                    </table>
+                </div>
+                <input type="file" name="avatar" />
+                <input type="reset" value="重置" class="btn btn-primary" id="reset" />
+                <button type="submit" id="submitAdd" >搜索 </button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<hr>
+hubula为您找到相关结果约{{.pagings.TotalCount}}个
+{{ range $k,$v:=.pagings.Data }}
+    <li>
+        <a href="">{{$v.Id}}-{{$v}}</a>--<a href="edit?id={{$v.Id}}">编辑</a>--<a href="ruandel?id={{$v.Id}}">软删除</a>
+    </li>
+{{end}}
+
+<div id="page">
+    {{.pagings.Str}}
+</div>
+
+<strong><span><i></i></span><span class="pc">当前页</span></strong>
+?ie=utf-8&wd=yy&pn=90&
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+    });
+
+</script>
+

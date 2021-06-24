@@ -130,9 +130,9 @@ func (d *ADemoDao) Update(data *models.ADemo, columns []string) (int64,error) {
 func (d *ADemoDao) RuanDelete(id int64) (int64, error) {
 	m := d.newModel()
 	m.Id = id
-	m.IsDel = 0
+	m.IsDel = 1
 
-	num, err := d.engine.ID(&m.Id).Update(m)
+	num, err := d.engine.ID(m.Id).Update(m)
 	if err == nil {
 		return num, nil
 	}

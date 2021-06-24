@@ -52,6 +52,7 @@ func MasterEngine() *xorm.Engine {
 	//解锁
 	defer dbLock.Unlock()
 
+	//也许存在排队的可能
 	if masterEngine != nil {
 		return masterEngine
 	}
@@ -132,6 +133,8 @@ func settings(engine *xorm.Engine, mors string) {
 	if conf.Configs().DB[mors].MaxOpenConns > 0 {
 		engine.SetMaxOpenConns(conf.Configs().DB[mors].MaxOpenConns)
 	}
+
+	//engine.SetMaxOpenConns(10)
 
 	// 性能优化的时候才考虑，加上本机的SQL缓存
 	//cacher := xorm.NewLRUCacher(xorm.NewMemoryStore(), 1000)

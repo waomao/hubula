@@ -83,6 +83,7 @@ aes_key="Hubu&La_LangLi_WaoMao"
         logLevel = "debug"
         maxIdleConns = 10
         maxOpenConns = 10
+        #状态 是否正常运行
         isRunning = true
         parseTime = true
         # connMaxLifetime = 10
@@ -93,6 +94,10 @@ aes_key="Hubu&La_LangLi_WaoMao"
     [redis.master]
         host = "10.0.0.1"
         port = 6379
+        user = "10.0.0.1"
+        pwd = "10.0.0.1"
+        #是否正常运行
+        isRunning = false
     [redis.slave]
         host = "10.0.0.1"
         port = 6380

@@ -13,6 +13,7 @@ func newApp() *bootstrap.Bootstrapper {
 	app := bootstrap.New("Go+iris", "作者")
 	app.Bootstrap()
 
+	//中间件
 	app.Configure(identity.Configure, routes.Configure)
 
 	return app

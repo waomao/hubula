@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <!--引入外部HTML文件-->
-    {{ render "shared/_head.html"}}
-    {{ part "head" }}
-</head>
-<body>
-{{ yield }}
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <!--引入外部HTML文件-->
+        {{ render "shared/_head.html"}}
+        {{ part "head" }}
+        <script type="text/javascript" src="/public/js/jquery.min.js"></script>
+    </head>
+    <body>
+    {{ yield }}
+    </body>
 </html>

@@ -31,7 +31,7 @@ var (
 	SignSecret = []byte("0123456789abcdef")
 
 	//CookieSecret cookie中的加密验证密钥
-	CookieSecret = "hellolottery"
+	CookieSecret = "waomao.com_login_276566565"
 
 	// 请求日志记录
 	CustomLogger = logger.New(logger.Config{

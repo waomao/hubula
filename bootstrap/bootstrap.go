@@ -10,7 +10,7 @@ import (
 )
 
 //Configurator 定义配置器 类型是func
-type Configurator func(*Bootstrapper)
+type Configurator func(bootstrapper *Bootstrapper)
 
 //Bootstrapper 使用Go内建的嵌入机制(匿名嵌入)，允许类型之前共享代码和数据
 // （Bootstrapper继承和共享 iris.Application ）
@@ -18,6 +18,8 @@ type Configurator func(*Bootstrapper)
 type Bootstrapper struct {
 	//内置继承iris类
 	*iris.Application
+
+	//两个基本的标识信息
 	AppName  string
 	AppOwner string
 	//创建时间
@@ -25,7 +27,7 @@ type Bootstrapper struct {
 }
 
 // New returns a new Bootstrapper.
-//实例化
+//实例化 cfgs ...Configurator更多参数
 func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	b := &Bootstrapper{
 		Application:  iris.New(),
@@ -34,6 +36,7 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 		AppOwner:     appOwner,
 	}
 
+	//更多配置是一个切片。循环取出
 	for _, cfg := range cfgs {
 		cfg(b)
 	}
@@ -116,8 +119,6 @@ func (b *Bootstrapper) setupCron() {
 // Returns itself.
 //初始化
 func (b *Bootstrapper) Bootstrap() *Bootstrapper {
-	//b.Logger().SetLevel("debug")
-
 	//模板目录
 	b.SetupViews(conf.Configs().Webvar.Views)
 
@@ -131,9 +132,43 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 	b.HandleDir(conf.StaticAssets[1:len(conf.StaticAssets)-1], conf.StaticAssets)
 	b.HandleDir(conf.StaticPublic[1:len(conf.StaticPublic)-1], conf.StaticPublic)
 
+	//后台
+	b.HandleDir("/adpcss/", "./assets/pc/css/")
+	b.HandleDir("/adpimg/", "./assets/pc/img/")
+	b.HandleDir("/adpjs/", "./assets/pc/js/")
+	b.HandleDir("/adplib/", "./assets/pc/lib/")
+
+	b.HandleDir("/adwcss/", "./assets/wap/css/")
+	b.HandleDir("/adwimg/", "./assets/wap/img/")
+	b.HandleDir("/adwjs/", "./assets/wap/js/")
+	b.HandleDir("/adwlib/", "./assets/wap/lib/")
+
+	b.HandleDir("/adacss/", "./assets/auto/css/")
+	b.HandleDir("/adaimg/", "./assets/auto/img/")
+	b.HandleDir("/adajs/", "./assets/auto/js/")
+	b.HandleDir("/adalib/", "./assets/auto/lib/")
+
+	//前台
+	b.HandleDir("/inpcss/", "./public/pc/css/")
+	b.HandleDir("/inpimg/", "./public/pc/img/")
+	b.HandleDir("/inpjs/", "./public/pc/js/")
+	b.HandleDir("/inplib/", "./public/pc/lib/")
+
+	b.HandleDir("/inwcss/", "./public/wap/css/")
+	b.HandleDir("/inwimg/", "./public/wap/img/")
+	b.HandleDir("/inwjs/", "./public/wap/js/")
+	b.HandleDir("/inwlib/", "./public/wap/lib/")
+
+	b.HandleDir("/inacss/", "./public/auto/css/")
+	b.HandleDir("/inaimg/", "./public/auto/img/")
+	b.HandleDir("/inajs/", "./public/auto/js/")
+	b.HandleDir("/inalib/", "./public/auto/lib/")
+
+
 	//启动计划任务
 	b.setupCron()
 
+	//b.Logger().SetLevel("debug")
 	//出异常
 	b.Use(recover.New())
 	//日志

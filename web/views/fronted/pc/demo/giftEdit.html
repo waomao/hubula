@@ -1,0 +1,47 @@
+{{ define "fronted/pc/demo/giftEdit-head" }}
+    <title>{{.Title}} - demo</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+    </style>
+{{ end }}
+
+<div style="text-align: center;font-size: 22px;height: 500px;padding: 0;">
+    <div class="waikuang">
+        <div class="biaodan">
+            <form  id="reg" action="cru" method="POST">
+                <div class="shang">
+                    <table class="table table-hover table-bordered">
+                        <tr>
+                            修改用户信息
+                        </tr>
+                        <tr>
+                            <input type="hidden" class="form-control" name="Id" value="{{.by.Id}}" />
+                        </tr>
+                        <tr>
+                            <th>登录帐号</th>
+                            <td><input type="text" name="LoginName" class="form-control" id="LoginName" value="{{.by.LoginName}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>用户姓名</th>
+                            <td><input type="text" name="Vsername" class="form-control" id="Vsername" value="{{.by.Vsername}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>手机号</th>
+                            <td><input type="text" name="Mobile" class="form-control" id="Mobile" value="{{.by.Mobile}}" /></td>
+                        </tr>
+                        <tr>
+                            <th>电子邮箱</th>
+                            <td><input type="text" name="Email" class="form-control" id="Email" value="{{.by.Email}}" /></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <input type="reset" value="重置" class="btn btn-primary" id="reset" />
+                <input type="submit"value="提交" />
+
+            </form>
+        </div>
+    </div>
+</div>

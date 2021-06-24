@@ -40,6 +40,24 @@ type app struct {
 	Port int
 	Org     string `toml:"organization"`
 	Mark    string
+
+	////网站名字
+	//AppName string `json:"app_name"`
+	////网站作者
+	//AppOwner string `json:"app_owner"`
+	////模板目录 相对于 main.go的路径
+	//Views string `json:"views"`
+	////"./public/"
+	//StaticPublic string `json:"StaticPublic"`
+	////"./assets/"
+	//StaticAssets string `json:"StaticAssets"`
+	//// Favicon "favicon.ico"
+	//Favicon string `json:"Favicon"`
+	////端口
+	//Port       string `json:"port"`
+	//StaticPath string `json:"static_path"`
+	////开发模式 dev 或者 正式生产模式
+	//Mode string `json:"mode"`
 }
 
 type webvar struct {

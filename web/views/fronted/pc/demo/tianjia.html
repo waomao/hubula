@@ -1,0 +1,59 @@
+{{ define "fronted/pc/demo/tianjia-head" }}
+    <title>{{.Title}} - demo</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+    </style>
+{{ end }}
+
+<div style="text-align: center;font-size: 22px;height: 500px;padding: 0;">
+    <div class="waikuang">
+        <div class="biaodan">
+            <form  id="reg" action="tianjia" method="POST">
+                <div class="shang">
+                    <table class="table table-hover table-bordered">
+                        <tr>
+                            用户注册
+                        </tr>
+                        <tr>
+                            <input type="hidden" name="jid" class="form-control" id="jid" />
+                        </tr>
+                        <tr>
+                            <th>登录帐号</th>
+                            <td><input type="text" name="LoginName" class="form-control" id="LoginName" /></td>
+                        </tr>
+                        <tr>
+                            <th>用户姓名</th>
+                            <td><input type="text" name="Vsername" class="form-control" id="Vsername" /></td>
+                        </tr>
+                        <tr>
+                            <th>用户密码</th>
+                            <td><input type="password" name="Password" class="form-control" id="Password" /></td>
+                        </tr>
+                        <tr>
+                            <th>确认密码</th>
+                            <td><input type="password" name="Password2" class="form-control" id="Password2" /></td>
+                        </tr>
+                        <tr>
+                            <th>手机号</th>
+                            <td><input type="text" name="Mobile" class="form-control" id="Mobile" /></td>
+                        </tr>
+                        <tr>
+                            <th>电子邮箱</th>
+                            <td><input type="text" name="Email" class="form-control" id="Email" /></td>
+                        </tr>
+                        <tr>
+                            <th>创建时间</th>
+                            <td><input type="date" name="GenTime" class="form-control" id="GenTime" /></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <input type="reset" value="重置" class="btn btn-primary" id="reset" />
+                <input type="submit" value="用户注册">
+
+            </form>
+        </div>
+    </div>
+</div>
