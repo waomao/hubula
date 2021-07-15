@@ -33,7 +33,6 @@ func (d *ADemoDao) newMakeDataArr() []models.ADemo {
 
 // GetAll 列表查询
 //条件 fields字段常和更新一起使用为0查询或更新所有字段 排序 页数 每页条数 返回分页内容 err
-// sqlwhere (*common.SqlReturn, error)
 func (d *ADemoDao) GetAll(sqlwhere *common.SqlWhere) (*common.SqlReturn, error) {
 	//获取符合条件的数据总数
 	sessionCount := datasource.Filter(sqlwhere.Conditions)
@@ -43,17 +42,15 @@ func (d *ADemoDao) GetAll(sqlwhere *common.SqlWhere) (*common.SqlReturn, error) 
 		fmt.Println(err)
 		return nil, common.NewError(err.Error())
 	}
+	if count == 0 {
+		return nil, nil
+	}
 
 	//返回 总页数
 	po := common.GetPages(sqlwhere,count)
-	po = common.DealUri(po,sqlwhere.Uri)
-	//fmt.Println(po)
+	str := common.H(po)
 
-	sqlR := new(common.SqlReturn)
-	if count == 0 {
-		return sqlR, nil
-	}
-
+	//获取数据
 	session := datasource.Filter(sqlwhere.Conditions)
 	defer session.Close()
 	if sqlwhere.OrderBy != "" {
@@ -64,21 +61,24 @@ func (d *ADemoDao) GetAll(sqlwhere *common.SqlWhere) (*common.SqlReturn, error) 
 		//更新所有字段
 		session.AllCols()
 	}
+
 	data := d.newMakeDataArr()
+
 	err = session.Find(&data)
 	if err != nil {
 		fmt.Println(err)
 		return nil, common.NewError(err.Error())
 	}
+
+	//整合需要输出的内容
+	sqlR := new(common.SqlReturn)
+
 	sqlR.Data = make([]interface{}, len(data))
 	for y, x := range data {
 		sqlR.Data[y] = x
 	}
 
-	str := common.H(po)
 	sqlR.Str = template.HTML(str)
-	//fmt.Print(sqlR.Str)
-
 	sqlR.Page = po.Currentpage
 	sqlR.PageSize = po.PageSize
 	sqlR.TotalCount = count
@@ -152,6 +152,9 @@ func (d *ADemoDao) Delete(id int64) (int64, error) {
 }
 
 // GetWhere Sql语句
+//ll := "12"
+//sql := "SELECT * FROM `lianxiren` WHERE `tel` LIKE '%" + ll + "%' "
+//where := c.ServiceADemo.GetWhere(sql)
 func (d *ADemoDao) GetWhere(sql string) []models.ADemo {
 	datalist := d.newMakeDataArr()
 	err := d.engine.SQL(sql).Find(&datalist)
@@ -160,4 +163,42 @@ func (d *ADemoDao) GetWhere(sql string) []models.ADemo {
 	} else {
 		return datalist
 	}
+}
+
+/**
+递归获取树形菜单
+*/
+
+func (d *ADemoDao) GetMenu(pid int) []*models.ADemo {
+	menu := make([]models.ADemo, 0)
+	err := d.engine.Where("superior_id =?", pid).Find(&menu)
+	if err != nil || len(menu) < 1 {
+		return nil
+	}
+
+	WebsiteMap := make([]*models.ADemo, 0)
+	for _, v := range menu {
+		fmt.Println(v.Id)
+
+		child := d.GetMenu(int(v.Id))
+		node := &models.ADemo{
+			Id:            v.Id,
+			ToId:          v.ToId,
+			LoginName:     v.LoginName,
+			Password:      v.Password,
+			Vsername:      v.Vsername,
+			Mobile:        v.Mobile,
+			Email:         v.Email,
+			GenTime:       v.GenTime,
+			LoginTime:     v.LoginTime,
+			LastLoginTime: v.LastLoginTime,
+			Count:         v.Count,
+			IsDel:         v.IsDel,
+			SuperiorId:    v.SuperiorId,
+			Power:         v.Power,
+		}
+		node.Children = child
+		WebsiteMap = append(WebsiteMap, node)
+	}
+	return WebsiteMap
 }

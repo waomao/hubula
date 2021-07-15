@@ -1,5 +1,6 @@
 # hubula
-Go语言网站项目
+
+Go语言网站项目 https://github.com/waomao/hubula.git
 
 源于实践，不足之处请大佬们多多指教
 
@@ -23,9 +24,21 @@ go-sql-driver/mysql v1.6.0
 
 
 
+# 使用
+
+首先下载该项目
+
+使用go mod 需要设置的环境变量
+
+GO111MODULE = on   
+GOPROXY = https://goproxy.cn,direct
+
+建议使用Goland并设置它
+
 
 
 ## 进程
+
 V0.0.2 完整的demo
 
 V0.0.1.5 简单的数据库操作

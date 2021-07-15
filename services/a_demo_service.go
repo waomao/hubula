@@ -28,6 +28,7 @@ type ADemoService interface {
 
 	// GetWhere Sql语句
 	GetWhere(sql string) []models.ADemo
+	GetMenu(pid int) []*models.ADemo
 }
 
 type aDemoService struct {
@@ -91,4 +92,8 @@ func (s *aDemoService) Delete(id int64) (int64, error) {
 // GetWhere Sql语句
 func (s *aDemoService) GetWhere(sql string) []models.ADemo {
 	return s.dao.GetWhere(sql)
+}
+
+func (s *aDemoService) GetMenu(pid int) []*models.ADemo {
+	return s.dao.GetMenu(pid)
 }

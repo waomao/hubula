@@ -12,9 +12,9 @@ import (
 	"xorm.io/core"
 )
 
-//dbLock 互斥锁
-var dbLock sync.Mutex
 var (
+	//dbLock 互斥锁
+	dbLock sync.Mutex
 	//保持一个
 	masterEngine *xorm.Engine
 	slaveEngine  *xorm.Engine

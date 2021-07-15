@@ -24,7 +24,7 @@ import (
    }
 */
 
-//
+//GetAll 列表查询传入的结构体
 type SqlWhere struct {
 	TableName           string //表名  -----------------[必填]
 	Conditions          map[string]interface{} //条件
@@ -35,7 +35,19 @@ type SqlWhere struct {
 	Uri                 string
 }
 
-//分页
+//GetAll 列表查询返回的结构体
+//返回总记录条数,总页数,以及当前请求的数据RawSeter
+type SqlReturn struct {
+	Page        int64   //当前页		`json:"page"`
+	PageSize    int64   //每页条数
+	TotalCount  int64   //总条数
+	TotalPage   int64   //总页码
+	Data        []interface{}        `json:"data"`  //数据
+	Href        string //A标签的链接地址  ---------[不需要设置]
+	Str         template.HTML  //分页
+}
+
+//分页标签信息
 type PageOptions struct {
 	FirstPageText       string //首页文字  默认"首页"
 	LastPageText        string //尾页文字  默认"尾页"
@@ -47,7 +59,7 @@ type PageOptions struct {
 	LinkItemCount       int64    //生成A标签的个数 默认10个
 	PageSize            int64    //页面大小,默认20
 	TotalPage           int64   //总页码
-	ParamName           string //参数名称  默认是pno
+	ParamName           string //参数名称  默认是page
 
 	Href                string //A标签的链接地址  ---------[不需要设置]
 
@@ -55,21 +67,7 @@ type PageOptions struct {
 	EnablePreNexLink    bool   //是否启用上一页,下一页连接 默认false 建议开启
 }
 
-//总记录条数,总页数,以及当前请求的数据RawSeter
-type SqlReturn struct {
-	Page        int64   //当前页		`json:"page"`
-	PageSize    int64   //每页条数
-	TotalCount  int64   //总条数
-	TotalPage   int64   //总页码
-	Data        []interface{}        `json:"data"`  //数据
-	Href        string //A标签的链接地址  ---------[不需要设置]
-	Str         template.HTML  //分页
-}
-
-/**
- *传入总页数
- * 设置默认值
- */
+//设置默认值
 func SetDefault(po *PageOptions) *PageOptions {
 	if len(po.FirstPageText) <= 0 {
 		po.FirstPageText = "首页"
@@ -80,7 +78,6 @@ func SetDefault(po *PageOptions) *PageOptions {
 	if len(po.PrePageText) <= 0 {
 		po.PrePageText = "&lt; 上一页"
 	}
-
 	if len(po.NextPageText) <= 0 {
 		po.NextPageText = "下一页 &gt;"
 	}
@@ -104,12 +101,16 @@ func SetDefault(po *PageOptions) *PageOptions {
 	return po
 }
 
-//总页码 当前页 页面大小
+//第一步 传入总条数 totalCount 返回分页标签信息 *PageOptions
 func GetPages(sqlwhere *SqlWhere,totalCount int64) (po *PageOptions) {
 	po = new(PageOptions)
+
+	//当前页
 	if sqlwhere.Currentpage <= 1 {
 		sqlwhere.Currentpage = 1
 	}
+
+	//每页数量
 	if sqlwhere.PageSize == 0 {
 		sqlwhere.PageSize = 20
 	}
@@ -126,10 +127,17 @@ func GetPages(sqlwhere *SqlWhere,totalCount int64) (po *PageOptions) {
 		}
 		totalPage = temp
 	}
+
+	//当前页
 	po.Currentpage = sqlwhere.Currentpage
+	//每页数量
 	po.PageSize = sqlwhere.PageSize
+	//总页数
 	po.TotalPage = totalPage
+
+	//对比并设置默认值
 	po = SetDefault(po)
+	po = DealUri(po,sqlwhere.Uri)
 	return
 }
 
@@ -137,8 +145,11 @@ func GetPages(sqlwhere *SqlWhere,totalCount int64) (po *PageOptions) {
  * 处理url,目的是保存参数
  * ParamName  string //参数名称  默认是pno
  */
+//第二步 处理 PageOptions.Href A标签的链接地址
 func DealUri(po *PageOptions,uri string) *PageOptions{
 	var rs string
+
+	//如果url ？ 后面带参数
 	if strings.Contains(uri, "?") {
 		arr := strings.Split(uri, "?")
 		rs = arr[0] + "?" + po.ParamName + "time=" + strconv.Itoa(time.Now().Second())
@@ -155,6 +166,7 @@ func DealUri(po *PageOptions,uri string) *PageOptions{
 	return po
 }
 
+//最后 组装分页标签
 func H(po *PageOptions) string {
 	str := ""
 	if po.TotalPage <= po.LinkItemCount {

@@ -1,7 +1,12 @@
 package common
 
 import (
+	"crypto/md5"
+	"encoding/json"
 	"fmt"
+	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/sessions"
+	"github.com/waomao/hubula/web/viewsmodels"
 	"net"
 	"net/http"
 	"regexp"
@@ -83,99 +88,139 @@ func Redirect(writer http.ResponseWriter, url string) {
 	writer.WriteHeader(http.StatusFound)
 }
 
-//// 从cookie中得到当前登录的用户
-//func GetLoginUser(request *http.Request) *models.ObjLoginuser {
-//	//获取cookie lottery_loginuser
-//	c, err := request.Cookie("waomao_loginuser")
-//	if err != nil {
-//		return nil
-//	}
-//	//用url格式解析cookie
-//	params, err := url.ParseQuery(c.Value)
-//	if err != nil {
-//		return nil
-//	}
-//	//转换uid
-//	uid, err := strconv.Atoi(params.Get("uid"))
-//	if err != nil || uid < 1 {
-//		return nil
-//	}
-//	// Cookie最长使用时长
-//	now, err := strconv.Atoi(params.Get("now"))
-//	//当前时间 - cookie 时间 大于 30天 cookie失效
-//	if err != nil || NowUnix()-now > 86400*30 {
-//		return nil
-//	}
-//	//// IP修改了是不是要重新登录
-//	//ip := params.Get("ip")
-//	//if ip != ClientIP(request) {
-//	//	return nil
-//	//}
-//	// 登录信息
-//	loginuser := &models.ObjLoginuser{}
-//	loginuser.Uid = uid
-//	loginuser.Username = params.Get("username")
-//	loginuser.Now = now
-//	loginuser.Ip = ClientIP(request)
-//	//签名
-//	loginuser.Sign = params.Get("sign")
-//	// if err != nil {
-//	// 	log.Println("fuc_web GetLoginUser Unmarshal ", err)
-//	// 	return nil
-//	// }
-//	//验证签名
-//	sign := createLoginuserSign(loginuser)
-//	if sign != loginuser.Sign {
-//		log.Println("fuc_web GetLoginUser createLoginuserSign not sign", sign, loginuser.Sign)
-//		return nil
-//	}
-//
-//	return loginuser
+
+////////////////////////////////
+
+var (
+	cookieNameForSessionID = "mycookiesessionnameid"
+	Sess                   = sessions.New(sessions.Config{Cookie: cookieNameForSessionID})
+)
+
+
+// encrypt password 加密密码
+func PasswordSalt(pass, salt string) string {
+	salt1 := "4%$@w"
+	//密码干扰码
+	password_salt := "123123123123213123c"
+	str :=salt1+pass+salt+password_salt
+	//return crypt.Md5(crypt.Sha256(str))
+	return fmt.Sprintf("%x", md5.Sum([]byte(str)))
+}
+//验证
+func PasswordVerify(password,  pass, salt string) bool {
+	return password == PasswordSalt(pass, salt)
+}
+
+// 通用 session 填充
+func SessionSet(c iris.Context , sessionname string , sessionvalue interface{}) {
+	//存入 Session
+	session := Sess.Start(c)
+	session.Set(sessionname,sessionvalue)
+}
+
+// 用户登录 session 填充
+func LoginSessionSet(c iris.Context , sessionname string , sessionvalue *viewsmodels.AdminSession) {
+	//存入 Session
+	str2,_ := json.Marshal(sessionvalue)
+	session := Sess.Start(c)
+
+	//用户名
+	session.Set(sessionname, string(str2))
+	//登录状态
+	session.Set("ISLOGIN", true)
+
+	//格式化显示
+	//buff,_ := json.MarshalIndent(sessionvalue,"","   ")
+	//fmt.Println("str => ?", string(buff))
+}
+
+//获取
+func LoginSession(c iris.Context) (*viewsmodels.AdminSession) {
+	session := Sess.Start(c)
+
+	user := session.GetString("jname")
+	//fmt.Println(usern)
+
+
+	if user == "" {
+		return nil
+	}
+
+	stu := &viewsmodels.AdminSession{}
+	err := json.Unmarshal([]byte(user),&stu)
+	if err != nil{
+		return nil
+	}
+
+	return stu
+}
+
+//获取
+func LoginSessionGet(c iris.Context , sessionname string) (bool,*viewsmodels.AdminSession, error) {
+	session := Sess.Start(c)
+	SESSION_NAME := sessionname
+
+	login,err := session.GetBoolean("ISLOGIN")
+	user := session.GetString(SESSION_NAME)
+	//fmt.Println(usern)
+
+	if err != nil {
+		return false,nil, fmt.Errorf("Msg : Session 不存在")
+	}
+
+	if err == nil && user == "" {
+		return false,nil, fmt.Errorf("Msg : Session 为空")
+	}
+
+	stu := &viewsmodels.AdminSession{}
+	err = json.Unmarshal([]byte(user),&stu)
+	if err != nil{
+		return false,nil, fmt.Errorf("Msg : Session 序列号转换错误" + err.Error())
+	}
+
+	return login,stu, nil
+}
+
+//转换
+//func Convert(admUser *models.Admin) *viewsmodels.AdminSession {
+//	//赋值
+//	Session := &viewsmodels.AdminSession{}
+//	Session.Username = admUser.Username
+//	Session.Aid = int(admUser.Aid)
+//	Session.Mail = admUser.Mail
+//	Session.TimeAdd = admUser.TimeAdd
+//	Session.Ip = admUser.Ip
+//	Session.NickName = admUser.NickName
+//	Session.TrueName = admUser.TrueName
+//	Session.Qq = admUser.Qq
+//	Session.Phone = admUser.Phone
+//	Session.Mobile = admUser.Mobile
+//	return Session
 //}
 
-//// 将登录的用户信息设置到cookie中
-//func SetLoginuser(writer http.ResponseWriter, loginuser *models.ObjLoginuser) {
-//	//如果不存在或id小于1 清理cookie
-//	if loginuser == nil || loginuser.Uid < 1 {
-//		c := &http.Cookie{
-//			Name:  "waomao_loginuser",
-//			Value: "",
-//			Path:  "/",
-//			//过期
-//			MaxAge: -1,
-//			Domain: "paodj.com",
-//		}
-//		http.SetCookie(writer, c)
-//		return
-//	}
-//	//如果签名为空 则生成签名
-//	if loginuser.Sign == "" {
-//		loginuser.Sign = createLoginuserSign(loginuser)
-//	}
-//	//构造一个参数
-//	params := url.Values{}
-//	//构造好写入cookie
-//	params.Add("uid", strconv.Itoa(loginuser.Uid))
-//	params.Add("username", loginuser.Username)
-//	params.Add("now", strconv.Itoa(loginuser.Now))
-//	params.Add("ip", loginuser.Ip)
-//	params.Add("sign", loginuser.Sign)
-//	c := &http.Cookie{
-//		Name:   "waomao_loginuser",
-//		Value:  params.Encode(),
-//		Path:   "/",
-//		Domain: "paodj.com",
-//	}
-//	http.SetCookie(writer, c)
-//}
-//
-//// 根据登录用户信息生成加密字符串 签名
-//func createLoginuserSign(loginuser *models.ObjLoginuser) string {
-//	str := fmt.Sprintf("uid=%d&username=%s&secret=%s&now=%d", loginuser.Uid, loginuser.Username, conf.CookieSecret, loginuser.Now)
-//	//fmt.Println(str)
-//	//md5
-//	sign := fmt.Sprintf("%x", md5.Sum([]byte(str)))
-//	//fmt.Println(sign)
-//	return sign
-//	//return CreateSign(str)
-//}
+func loginNameHandler(ctx iris.Context){
+	name := ctx.Params().Get("name")
+	println(name)
+	ctx.Next()
+}
+
+func loginHandler(ctx iris.Context){
+	println("login")
+	ctx.Next()
+}
+
+func before(ctx iris.Context){
+	println("before")
+	ctx.Next() //继续执行下一个handler，这本例中是mainHandler
+}
+
+func mainHandler(ctx iris.Context){
+	println("mainHandler")
+	ctx.Next()
+}
+
+func after(ctx iris.Context){
+	println("after")
+	ctx.Next()
+}
+

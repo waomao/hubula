@@ -17,4 +17,7 @@ type ADemo struct {
 	LastLoginTime time.Time `xorm:"comment('上次登录时间') DATETIME"`
 	Count         int64     `xorm:"not null comment('登录次数') BIGINT(20)"`
 	IsDel      int64       `xorm:"not null default 0 comment('删除0否1是') BIGINT(20)"`
+	SuperiorId int           `xorm:"not null default 0 comment('上级id 默认0') INT(5)"`
+	Power      int           `xorm:"not null comment('操作权限') INT(2)"`
+	Children   []*ADemo `xorm:"-"`
 }
