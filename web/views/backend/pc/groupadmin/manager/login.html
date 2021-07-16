@@ -1,0 +1,96 @@
+{{ define "backend/pc/groupadmin/manager/login-head" }}
+    <title>{{.Title}} - Hubula后台首页</title>
+    <style type="text/css">
+        body {
+            background: #ffffff;
+        }
+    </style>
+{{ end }}
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">Admin</h1>
+
+        </div>
+        <h3>管理平台？</h3>
+        <form class="m-t" role="form" action="?" method="post">
+            <div class="form-group">
+                <input type="text" name="username" class="form-control" placeholder="用户名" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" class="form-control" placeholder="密码" required="">
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+            <p class="text-muted text-center"> <a href="/admin/oauth?type=csdn" target="_blank"><small>csdn</small></a></p>
+        </form>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="{{.__theme__}}js/jquery.min.js?v=2.1.4"></script>
+<script src="{{.__theme__}}js/bootstrap.min.js?v=3.3.6"></script>
+<script src="{{.__theme__}}js/plugins/layer/layer.min.js"></script>
+<script>
+    $('form').submit(function (e) {
+        e.preventDefault();
+        var btn=$('.btn');
+        btn.attr('disabled',true);
+        var $this=$(this);
+        $this.serialize();
+        //加载层
+        var loading = layer.load(0, {shade: false}); //0代表加载的风格，支持0-2
+        $.post($this.attr('action'),$this.serialize(),function (data) {
+            layer.close(loading);
+
+            if(data.code==1){
+                layer.tips('登录成功！正在跳转……', '.btn');
+                window.location.href='/admin/index'
+            }else{
+                console.log(data)
+                layer.alert(data.info,{ icon:2});
+                btn.attr('disabled',false);
+            }
+        },'json')
+        return false;
+    })
+
+</script>
+
+
+<div class="welcome">欢迎管理员登录</div>
+
+<ul id="nav_login" class="nav navbar-nav">
+    <li><a href="http://www.hubula.com/member/login/denglu">登录</a></li>
+</ul>
+<ul id="nav_logout" class="nav navbar-nav">
+    <li><a href="/myprize">我的中奖纪录</a></li>
+    <li><a href="http://www.hubula.com/member/login/tuichu">退出</a></li>
+</ul>
+<script src="/public/dist/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/public/dist/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/public/dist/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="/public/dist/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+    var uid = 0;
+    var username = "";
+    var login = $.cookie('waomao_loginuser')
+    if (login && login.length > 1) {
+        var datas = login.split("&")
+        for(var i = 0; i < datas.length; i++) {
+            var data = datas[i].split("=");
+            if (data[0] == "uid") {
+                uid = data[1] - 0;
+            } else if (data[0] == "username") {
+                username = data[1];
+            }
+        }
+        console.log(uid + " " + username)
+    }
+    if (uid > 0) {
+        $("#nav_login").hide();
+    } else {
+        $("#nav_logout").hide();
+    }
+</script>

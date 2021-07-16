@@ -1,0 +1,61 @@
+<h1>bMap 基于百度地图API的地址输入插件</h1>
+<p>
+    基于百度地图API的地址输入插件。可以输入地址关键词智能搜索或在地图上拖拽获取地址与坐标。<br />
+    调用百度API所使用的ak请到<a href="http://lbsyun.baidu.com/apiconsole/key">百度地图</a>申请，该ak仅为演示使用，不要用于实际项目中
+</p>
+
+<h2>案例一：默认无参数</h2>
+<div class="case">
+    <div class="bMap" id='case1'></div>
+</div>
+<h2>案例二：设置默认地址</h2>
+<div class="case">
+    <div class="bMap" id='case2'></div>
+</div>
+<h2>案例三：回调函数</h2>
+<div class="case">
+    <div class="bMap" id='case3'></div>
+    <div id="callback">
+        dsfdsfds
+    </div>
+</div>
+<hr>
+
+
+<div class="c_form_con" style="margin-top: 10px;">
+    <div class="c_form_right" style="position: relative;">
+        <div>*收餐地址：</div>
+        <input class="c_address" id="searchKeywords" style="width: 359px;margin-top:0px;padding-left:25px;background:url(/public/img/星星.png) 8px  center no-repeat;background-size: 14px;" type="text" placeholder="小区/写字楼/学校" />
+        <input id="addresslnglat"  type="hidden" value="" />
+        <div  style="display:block;;position: absolute; top:-16px;   z-index: 200000;    height: 15px;line-height:15px;font-size:12px; color:#fa9700; width: 386px;">请输入地址，并在下拉框中选择</div>
+        <div id="searchAddresslist" style="display:none;position: absolute; top:36px; max-height:213px;padding:0px 0px; background:#FFF;    z-index: 200000;border: 1px solid #ccc;border-top: 0px;overflow-y: scroll; width: 386px;"></div>
+    </div>
+    <div class="c_clear"></div>
+</div>
+
+
+
+<h2>引用文件：</h2>
+<pre>
+&lt;script src="http://api.map.baidu.com/api?v=2.0&ak=EZPCgQ6zGu6hZSmXlRrUMTpr"&gt;&lt;/script&gt;
+&lt;script src="jQuery-2.1.4.min.js"&gt;&lt;/script&gt;
+&lt;script src="map.jquery.min.js"&gt;&lt;/script&gt;
+</pre>
+<h2>调用代码：</h2>
+<pre>
+&lt;div class="bMap"&gt;&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;
+$(function(){
+	$(".bMap").bMap({
+		address:"北京市",  //默认地址，如果为空则通过解析默认坐标获取
+		location:[116.331398,39.897445],  //默认坐标，如果为空则通过解析默认地址获取
+		name:"map", //提交表单的NAME,默认为map
+		callback:function(address,point) //回调函数，返回地址数组与坐标
+				{
+					console.log(address);
+					console.log(point)
+				}
+	});
+})
+&lt;/script&gt;</pre>

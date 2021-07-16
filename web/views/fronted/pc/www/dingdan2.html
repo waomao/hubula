@@ -1,0 +1,628 @@
+<link href="/public/dist/css/dingdan.css" rel="stylesheet">
+<script src="/public/dist/js/vendor/jss.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=EZPCgQ6zGu6hZSmXlRrUMTpr"></script>
+<script type="text/javascript" src="/public/dist/js/vendor/map.jquery.js"></script>
+
+<div class="waikuang">
+    <div class="lishiuser" id="you">
+        <table class="table table-hover table-bordered" id="mytable">
+            <thead>
+            <tr id="lianxiren">
+            </tr>
+            <tr><th>编号</th><th>姓名</th><th>电话</th>
+                <th>详细地址</th><th>定位地址</th>
+                <th>经纬度</th><th>性别</th>
+                <th>标签</th><th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="listTable">
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="biaodan">
+        <form  id="reg" action="/dingdan" method="post" onsubmit="javascript:return saveReport();" enctype="application/x-www-form-urlencoded">
+            <div class="shang">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        取单信息
+                    </tr>
+
+
+                    <tr>
+                        <input type="hidden" name="jid" class="form-control" id="jid" />
+                    </tr>
+                    <tr>
+                        <th>姓名</th>
+                        <td><input type="text" name="jname" class="form-control" id="jname" /></td>
+                    </tr>
+                    <tr>
+                        <th>电话</th>
+                        <td><input type="text" name="jtel" class="form-control" id="jtel" /></td>
+                    </tr>
+                    <tr>
+                        <th>详细地址</th>
+                        <td><input type="text" name="jdizhi" class="form-control" id="jdizhi" /></td>
+                    </tr>
+                    <tr>
+                        <th>地址定位</th>
+                        <td>
+                            <div class="case">
+                                <div class="bMap" id='case1'></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+
+                        <th>性别</th>
+                        <th>男</th>
+                        <td><input type="radio" checked="checked" name="jsex" class="form-control" value="1" /></td>
+                        <th>女</th>
+                        <td><input type="radio" name="jsex" class="form-control" value="2" /></td>
+
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+
+                        <th>标签</th>
+                        <th>家</th>
+                        <td><input type="radio" checked="checked" name="jtag" class="form-control" value="1" /></td>
+                        <th>公司</th>
+                        <td><input type="radio" name="jtag" class="form-control" value="2" /></td>
+                        <th>学校</th>
+                        <td><input type="radio" name="jtag" class="form-control" value="3" /></td>
+
+                    </tr>
+                </table>
+
+            </div>
+
+            <div class="xia">
+                <table class="table table-hover table-bordered">
+                    <tr>
+                        送达信息
+                    </tr>
+                    <tr>
+                        <input type="hidden" name="sid" class="form-control" id="sid" />
+                    </tr>
+                    <tr>
+                        <th>姓名</th>
+                        <td><input type="text" name="sname" class="form-control" id="sname" /></td>
+                    </tr>
+                    <tr>
+                        <th>电话</th>
+                        <td><input type="text" name="stel" class="form-control" id="stel" /></td>
+                    </tr>
+                    <tr>
+                        <th>详细地址</th>
+                        <td><input type="text" name="sdizhi" class="form-control" id="sdizhi" /></td>
+                    </tr>
+                    <tr>
+                        <th>地址定位</th>
+                        <td>
+                            <div class="case">
+                                <div class="bMap" id='case2'></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+
+                <table>
+                    <tr>
+
+                        <th>性别</th>
+                        <th>男</th>
+                        <td><input type="radio" checked="checked" name="ssex" class="form-control" value="1" /></td>
+                        <th>女</th>
+                        <td><input type="radio" name="ssex" class="form-control" value="2" /></td>
+
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+
+                        <th>标签</th>
+                        <th>家</th>
+                        <td><input type="radio" checked="checked" name="stag" class="form-control" value="1" /></td>
+                        <th>公司</th>
+                        <td><input type="radio" name="stag" class="form-control" value="2" /></td>
+                        <th>学校</th>
+                        <td><input type="radio" name="stag" class="form-control" value="3" /></td>
+
+                    </tr>
+                </table>
+
+            </div>
+            <table class="table table-hover table-bordered">
+                <tr>
+                    <th style="color: tomato;">下单时间</th>
+                    <th>月</th>
+                    <td> <input type="text" name="yue" class="form-control" id="yue" /></td>
+                    <th>日</th>
+                    <td><input type="text" name="ri" class="form-control" id="ri" /></td>
+                    <th>时</th>
+                    <td><input type="text" name="shi" class="form-control" id="shi" /></td>
+                    <th>分</th>
+                    <td><input type="text" name="fen" class="form-control" id="fen" /></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>配送费</th>
+                    <td><input type="text" name="shopcost" class="form-control" value="8" /></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>支付类型</th>
+                    <th>在线支付</th>
+                    <td><input type="radio" checked="checked" name="paytype" class="form-control" value="1" /></td>
+                    <th>货到付款</th>
+                    <td><input type="radio" name="paytype" class="form-control" value="2" /></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>备注信息</th>
+                    <td><textarea type="text" name="content" class="form-control" cols="30"  rows="5"></textarea></td>
+                </tr>
+                <tr>
+                    <th>订单来源</th>
+                    <td><input type="text" name="ordertype" class="form-control" value="1" /></td>
+                </tr>
+                <tr>
+                    <th>-----订单内容</th>
+                    <td><input type="text" name="shopcost" class="form-control" value="1" /></td>
+                </tr>
+                <tr>
+                    <th>-----追加小费</th>
+                    <td><input type="text" name="shopcost" class="form-control" value="1" /></td>
+                </tr>
+                <tr>
+                    <th>-----订单标识</th>
+                    <td><input type="text" name="ordertype" class="form-control" value="1" /></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+
+                    <th>跑腿类型</th>
+                    <th>帮我取</th>
+                    <td><input type="radio" name="pttype" class="form-control" value="1" /></td>
+                    <th>帮我送</th>
+                    <td><input type="radio" checked="checked" name="pttype" class="form-control" value="2" /></td>
+                    <th>帮我买</th>
+                    <td><input type="radio" name="pttype" class="form-control" value="3" /></td>
+
+                </tr>
+            </table>
+            <table>
+                <tr>
+
+                    <th>配送时间</th>
+                    <th>立即配送</th>
+                    <td><input type="radio" checked="checked" name="pstime" class="form-control" value="1" /></td>
+                    <th>预约时间</th>
+                    <td><input type="radio" name="pstime" class="form-control" value="2" /></td>
+
+                </tr>
+            </table>
+            费用总计
+            派单骑手
+            <input type="reset" value="重置" class="btn btn-primary" id="reset" />
+            <input type="button" value="添加"  class="btn btn-success" id="add"  onclick="addList()" />
+            <input type="button" value="更新"  class="btn btn-info" id=""  onclick="update()" />
+
+            <input type="submit" value="提交订单">
+
+        </form>
+    </div>
+</div>
+
+
+<script>
+    $(function(){
+        $("#case1").bMap({name:"jadd",address:"天津市天津市静海区静海站"});//指定表单的name属性为position
+
+        $("#case2").bMap({name:"sadd",address:"天津市天津市静海区静海站"});
+
+        // $("#case3").bMap({name:"callback",address:"天津市天津市静海区静海站",location:["116.937479","38.938550"],callback:function(address,point){
+        // 	$("#callback").html("您选择的地址是:"+JSON.stringify(address))
+        // }});
+    })
+
+    $("#jname").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var jname = encodeURI($("#jname").val());
+        if (jname==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/joinname?name='+jname+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="up" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("寄件联系人");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+
+    $("#jtel").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var jtel = encodeURI($("#jtel").val());
+        if (jtel==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/jointel?tel='+jtel+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="up" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("寄件联系人");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+    $("#jdizhi").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var jdizhi = encodeURI($("#jdizhi").val());
+        if (jdizhi==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/joinadd?add='+jdizhi+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="up" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("寄件联系人");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+
+
+    //-----收货信息
+    $("#sname").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var sname = encodeURI($("#sname").val());
+        if (sname==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/joinname?name='+sname+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="ss" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("收货信息");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+
+    $("#stel").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var stel = encodeURI($("#stel").val());
+        if (stel==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/jointel?tel='+stel+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="ss" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("收货信息");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+    $("#sdizhi").blur(function(){
+        $("#listTable").html("");
+        $("#lianxiren").html("");
+        var sdizhi = encodeURI($("#sdizhi").val());
+        if (sdizhi==""){
+            return false;
+        }
+        //alert(jname);
+        $.ajax({
+            url:'/joinadd?add='+sdizhi+'&time='+new Date(), //请求验证页面
+            type:"GET", //请求方式 可换为post 注意验证页面接收方式
+            data:"user="+$("#usernamea").val(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>'+values.contactname+'</td>'+
+                        '<td>'+values.phone+'</td>'+
+                        '<td>'+values.detailadr+'</td>'+
+                        '<td>'+values.bigadr+'</td>'+
+                        '<td>'+values.lng+','+values.lat+'</td>'+
+                        '<td>'+values.sex+'</td>'+
+                        '<td>'+values.tag+'</td>'+
+                        '<td>'+
+                        '<input type="button" name="" value="选择寄件人" class="btn btn-info" id="ss" />'+
+                        '</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("收货信息");
+            },
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+    });
+
+
+    //------选择信息进行回填
+    //更新操作
+    //定义全局变量，用于存放要修改的行号
+    //var row=0;
+    $('#listTable').on('click','#up',function(){
+        //获取最后一个td前面所有的td节点
+        var val=$(this).parent().prevAll();
+        var arr=[];
+        //通过循环将所有td里面的文本放到数组里面
+        for(var i=0;i<val.length;i++){
+            arr[arr.length]=val.eq(i).text();
+        };
+        //得到的arr数组与表格顺序相反
+        //将arr数组逆序与表格顺序相同，以便依次填到input中
+        var arr1=arr.reverse();
+        //for(var j=0;j<$('form input').length;j++)
+        for(var j=0;j<val.length;j++){
+            $('form input').eq(j).val(arr1[j]);
+
+        };
+        //i是该行所在的行号
+        //var i=$('table').find("tr").index(val.parent()[0]);
+        //console.log(i);
+        //row=i;
+    });
+
+    $('#listTable').on('click','#ss',function(){
+        var tagName,type;
+        //获取最后一个td前面所有的td节点
+        var val=$(this).parent().prevAll();
+        var arr=[];
+        //通过循环将所有td里面的文本放到数组里面
+        for(var i=0;i<val.length;i++){
+            arr[arr.length]=val.eq(i).text();
+        };
+        //得到的arr数组与表格顺序相反
+        //将arr数组逆序与表格顺序相同，以便依次填到input中
+        var arr1=arr.reverse();
+        //for(var j=0;j<$('form input').length;j++)
+        for(var j=0;j<val.length;j++){
+            //alert($('form input').eq(j+11).attr('type'));
+            //alert(($('form input').eq(j+11))[0].tagName);
+            tagName=($('form input').eq(j+11))[0].tagName;
+            type=$('form input').eq(j+11).attr('type');
+            if (tagName=='INPUT'){
+                if(type=='radio'){
+                    //alert("单选框"+arr1[j]);
+                    $('form input').eq(j+11).attr('checked',$('form input').eq(j+11).val()==arr1[j]);
+                }else if(type=='checkbox'){
+
+                }else{
+                    //alert("普通input标签");
+                    $('form input').eq(j+11).val(arr1[j]);
+                }
+            }else if(tagName=='SELECT'||tagName=='TEXTAREA'){
+                //alert("不是input标签");
+                $('form input').eq(j+11).val(arr1[j]);
+            }
+        };
+        //i是该行所在的行号
+        //var i=$('table').find("tr").index(val.parent()[0]);
+        //console.log(i);
+        //row=i;
+    });
+
+
+
+    function saveReport(){
+        $("input[type=submit]").attr('disabled',true);
+        var jname = encodeURI($("#jname").val());
+        //alert(jname);
+        $.ajax({
+            url:'/dingdan', //请求验证页面
+            type:"POST", //请求方式 可换为post 注意验证页面接收方式
+            data: $('#reg').serialize(), //取得表文本框数据，作为提交数据 注意前面的 user 此处格式 key=value 其他方式请参考ajax手册
+            dataType:'json',
+            success: function(data) {
+                setTimeout(function(){
+                    $("input[type=submit]").attr('disabled',false);
+                },3000);
+                //请求成功时执行操作
+                //var dataObject = JSON.parse(data);
+                console.log(data);
+                //alert(data.aa);
+                var sr = '';
+                $.each(data.bb, function(index,values){
+                    sr += '<tr>'+
+                        '<td>'+values.id+'</td>'+
+                        '<td>成功</td>'+
+                        '</tr>';
+                    //         $.each(values, function(index2,value){
+                    //             sr += '<h1>'+value+'</h1>';
+                    //             console.log(data);
+                    //         });
+                });
+                $("#listTable").html(sr); //向ID为chk的元素内添加html代码
+                $("#lianxiren").html("寄件联系人");
+            },
+            error:function(){
+                setTimeout(function(){
+                    $("input[type=submit]").attr('disabled',false);
+                },3000);
+            }
+
+            // for (var i = 0 ;i < data.lenghth;i++)
+        });
+        return false;
+    }
+</script>

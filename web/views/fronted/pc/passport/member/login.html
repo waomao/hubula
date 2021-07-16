@@ -1,0 +1,102 @@
+<div class="welcome">欢迎登录</div>
+
+<ul id="nav_login" class="nav navbar-nav">
+    <li><a href="/passport/member/login/denglu">登录</a></li>
+</ul>
+<ul id="nav_logout" class="nav navbar-nav">
+    <li><a href="/myprize">我的中奖纪录</a></li>
+    <li><a href="/passport/member/login/tuichu">退出</a></li>
+</ul>
+<script src="/public/dist/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/public/dist/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/public/dist/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+<script>
+    var uid = 0;
+    var username = "";
+    var login = $.cookie('waomao_loginuser')
+    if (login && login.length > 1) {
+        var datas = login.split("&")
+        for(var i = 0; i < datas.length; i++) {
+            var data = datas[i].split("=");
+            if (data[0] == "uid") {
+                uid = data[1] - 0;
+            } else if (data[0] == "username") {
+                username = data[1];
+            }
+        }
+        console.log(uid + " " + username)
+    }
+    if (uid > 0) {
+        $("#nav_login").hide();
+    } else {
+        $("#nav_logout").hide();
+    }
+</script>
+
+<div class="container-fluid">
+    <div class="panel panel-default" style="margin-bottom: 0px;">
+        <div class="panel-heading" style="margin-bottom:12px;">
+            <a href="/admin/gift">返回</a>
+            {{if gt .info.Id 0}}编辑{{else}}添加{{end}}奖品信息
+        </div>
+
+        <form action="/cru" method="post">
+
+            名字: <input type="text" name="Username" value="{{.info.Username}}">
+
+            密码: <input type="text" name="Pwd" value="{{.info.Pwd}}">
+
+            Mail: <input type="text" name="email" value="{{.info.Email}}">
+            <br />
+
+
+            <hr />
+
+            <button type="submit" class="btn btn-default">保存</button>
+            <input type="reset" class="btn btn-default" value="重置" />
+            <input type="hidden" class="form-control" id="input_id" name="Id" value="{{.info.Id}}">
+
+        </form>
+    </div>
+</div>
+
+
+
+
+<div class="welcome">欢迎登录</div>
+
+<ul id="nav_login" class="nav navbar-nav">
+    <li><a href="http://passport.paodj.com/member/login/denglu">登录</a></li>
+</ul>
+<ul id="nav_logout" class="nav navbar-nav">
+    <li><a href="/myprize">我的中奖纪录</a></li>
+    <li><a href="http://passport.paodj.com/member/login/tuichu">退出</a></li>
+</ul>
+<script src="/public/dist/jquery/1.12.4/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/public/dist/js/vendor/jquery.min.js"><\/script>')</script>
+<script src="/public/dist/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="/public/dist/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<script>
+    var uid = 0;
+    var username = "";
+    var login = $.cookie('waomao_loginuser')
+    if (login && login.length > 1) {
+        var datas = login.split("&")
+        for(var i = 0; i < datas.length; i++) {
+            var data = datas[i].split("=");
+            if (data[0] == "uid") {
+                uid = data[1] - 0;
+            } else if (data[0] == "username") {
+                username = data[1];
+            }
+        }
+        console.log(uid + " " + username)
+    }
+    if (uid > 0) {
+        $("#nav_login").hide();
+    } else {
+        $("#nav_logout").hide();
+    }
+</script>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Title}}Document</title>
+    <style>
+        /* reset */
+        html,body,h1,h2,h3,h4,h5,h6,div,dl,dt,dd,ul,ol,li,p,blockquote,pre,hr,figure,table,caption,th,td,form,fieldset,legend,input,button,textarea,menu{margin:0;padding:0;}
+
+        body{padding:100px;font-size: 14px;}
+        h1{font-size: 26px;}
+        p{font-size: 14px; margin-top: 10px;}
+        pre{background:#eee;border:1px solid #ddd;border-left:4px solid #f60;padding:15px;margin-top: 15px;}
+        h2{font-size: 20px;margin-top: 20px;}
+
+
+        .tc{display: block;padding: 1em 1.5em;border: 3px solid #fff;font-weight: 700;margin: 50px auto;background:#1d7db1;color: #fff;}
+        .tc a:hover{opacity: 0.6;}
+
+        /*--弹窗样式--*/
+
+        #gray{width:100%;height:100%;background:rgba(0,0,0,0.3);position:fixed;top:0px;display:none;z-index:99;}
+
+        .popup{
+            width:532px;
+            height:auto;
+            background-color:#fff;
+            position:absolute;
+            z-index:100;
+            border:1px solid #ebeaea;
+            left:400px;
+            top:96px;
+            display:none;
+        }
+        .popup .top_nav{
+            width:532px;
+            height:46px;
+            background-image: url(../images/popup_top_bj.jpg);
+            border-bottom:1px solid #ebeaea;
+            position:relative;
+            cursor:move;
+        }
+        .popup .top_nav i{width:35px;height:35px;background:url(../images/sucai_tubiao.png) -314px -5px;position:absolute;top:6px;left:8px;display:block; }
+        .popup .top_nav span{font:18px/18px 'microsoft yahei';color:#707070;display:block;position:absolute;top:13px;left:50px;}
+
+        .popup .top_nav a.guanbi { background:url(../images/popup_guanbi.png) repeat 0px 0px; width:35px; height: 35px; display: block; position:absolute;top:8px;right:10px;cursor:pointer;}
+        .popup .top_nav a.guanbi span { display: none;}
+        .popup .top_nav a.guanbi:hover { background: url(../images/popup_guanbi.png) repeat 0px -35px; }
+        .popup .min{width:532px;height:auto;padding:10px;}
+
+
+        .hide_box{
+            z-index:999;
+            filter:alpha(opacity=50);
+            background:#666;
+            opacity: 0.5;
+            -moz-opacity: 0.5;
+            left:0;
+            top:0;
+            height:99%;width:100%;
+            position:fixed;
+            display:none;
+        }
+
+        .shang_box{
+            width:800px;
+            height:450px;
+            padding:10px;
+            background-color:#fff;
+            border-radius:10px;position:fixed;z-index:1000;
+            left:50%;top:50%;
+            margin-left:-400px;
+            margin-top:-230px;
+            border:1px dotted #dedede;display:none;
+        }
+        .shang_box img{border:none;border-width:0;}
+
+        .dashang{display:block;width:100px;margin:5px auto;height:25px;line-height:25px;padding:10px;background-color:#E74851;color:#fff;text-align:center;text-decoration:none;border-radius:10px;font-weight:bold;font-size:16px;transition: all 0.3s;}
+        .dashang:hover{opacity:0.8;padding:15px;font-size:18px;}
+        .shang_close{float:right;display:inline-block;}
+
+
+
+        .top_nav{
+            width:800px;
+            height:45px;
+            background-image: url(/public/img/月亮.png);
+            border-bottom:1px solid #ebeaea;
+            position:relative;
+
+        }
+        .top_nav i{width:35px;height:35px;background:url(/public/img/太阳.png) -314px -5px;position:absolute;top:6px;left:8px;display:block; }
+        .top_nav span{font:18px/18px 'microsoft yahei';color:#707070;display:block;position:absolute;top:13px;left:50px;}
+
+        .top_nav a.guanbi { background:url(/public/img/太阳.png) repeat 0px 0px; width:35px; height: 35px; display: block; position:absolute;top:8px;right:10px;cursor:pointer;}
+        .top_nav a.guanbi span { display: none;}
+        .top_nav a.guanbi:hover { background: url(/public/img/太阳.png) repeat 0px -35px; }
+
+
+        .le-btn{
+
+            width: 100px;
+
+            height: 100px;
+
+            border-radius: 10px;
+
+            background-color: #00BCD4;
+
+            cursor: pointer;
+
+            margin-top: 300px;
+
+            margin-left: 300px;
+
+            float: left;
+
+        }
+
+        .re-btn{
+
+            float: left;
+
+            width: 100px;
+
+            height: 100px;
+
+            border-radius: 10px;
+
+            background-color: #00BCD4;
+
+            cursor: pointer;
+
+            margin-top: 300px;
+
+            margin-left: 300px;
+
+        }
+
+
+
+        .case{margin-top: 15px;width:400px;}
+        .bMap{position: relative;}
+        .bMap .map-warp{position: absolute;left:10px;width:400px;height:400px;top:34px; background-color: #1d7db1; display: none;z-index: 999;}
+        .bMap input{width:100%;height:30px;line-height: 30px;border:1px solid #d7d7d7;}
+        .tangram-suggestion-main{z-index: 9999}
+    </style>
+
+    <link rel="stylesheet" href="/public/css/waomaoui.css">
+
+    <script type="text/javascript" src="/public/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/js/map.jquery.min.js"></script>
+
+    <script type="text/javascript">
+        $(function(){
+
+//表单获得焦点，初始化地图
+            //表单失去焦点，隐藏地图
+
+            $("#Map_input").focus(function(event){
+                $(".map-warp").show();
+                setMap();
+            });
+
+            $("#Map_input").blur(function(event){
+                $(".map-warp").hide();
+            });
+
+
+            //创建地图，并绑定输入框
+            function setMap(){
+                if(map) return false;
+                map = new BMap.Map("Map",{enableMapClick: false});
+                map.centerAndZoom(new BMap.Point(location_lng, location_lat),15);
+                map.enableScrollWheelZoom();
+                map.enableContinuousZoom();
+                marker(point);
+                map.addEventListener("click", function(e){
+                    marker(e.point);
+                    getLocation(e.point)
+                });
+
+                var valtemp = $input.val();
+                ac = new BMap.Autocomplete(
+                    {"input" : "Map_input_"+name,"location" : map}
+                );
+                ac.setInputValue(valtemp);
+                ac.addEventListener("onconfirm", function(e) { //鼠标点击下拉列表后的事件
+                    var _value = e.item.value;
+                    myValue = _value.province + _value.city + _value.district + _value.street + _value.business;
+
+                    function myFun(){
+                        var pp = local.getResults().getPoi(0).point;    //获取智能搜索的结果
+                        map.centerAndZoom(pp, 15);
+                        getLocation(pp,_value);
+                        marker(pp);
+                    }
+                    var local = new BMap.LocalSearch(map, { //智能搜索
+                        onSearchComplete: myFun
+                    });
+                    local.search(myValue);
+                });
+
+            };
+
+
+
+            $("a.guanbi").click(function(){
+
+                $(".hide_box").fadeToggle();
+                $(".shang_box").fadeToggle();
+            });
+        });
+
+        //
+        //窗口效果
+        //点击登录class为tc 显示
+        $(".tc").click(function(){
+            $("#gray").show();
+            $("#popup").show();//查找ID为popup的DIV show()显示#gray
+            tc_center();
+        });
+        //点击关闭按钮
+        $(".guanbi").click(function(){
+            $(".hide_box").hide();
+            $(".shang_box").hide();//查找ID为popup的DIV hide()隐藏
+        })
+
+
+
+
+        function dashangToggle(){
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+        }
+
+
+
+
+        $(document).ready(function(){
+
+            $("#div1").click(function(){
+
+                popup("div1");
+
+            });
+
+            $("#div2").click(function(){
+
+                popup("div2");
+
+            });
+
+        });
+
+
+
+        function popup(id){
+
+            var obj=document.getElementById(id);
+
+            var t='<div class="arror"id="pop">'+id+'</div>';
+
+            $(t).appendTo("body");
+
+            $(".arror").css("width",80);
+
+            $(".arror").css("height",30);
+
+            $(".arror").css("position","absolute");
+
+            $(".arror").css("border-radius",4);
+
+            $(".arror").css("border","1px solid #858585");
+
+            varleft=(obj.getBoundingClientRect().left+(($("#"+id).width()-$(".arror").width())/2));
+
+            vartop=obj.getBoundingClientRect().top-$(".arror").height()-10;
+
+            $(".arror").css("left",left);
+
+            $(".arror").css("top",top);
+
+        }
+
+    </script>
+
+</head>
+<body>
+{{ yield }}
+<div class="le-btn"id="div1">q</div>
+
+<div class="re-btn"id="div2">w</div>
+<hr />
+<div class="hide_box"></div>
+<div class="shang_box">
+    <div class="top_nav" id='top_nav'>
+        <div align="center">
+            <span>登录账号</span>
+            <a class="guanbi"></a>
+        </div>
+    </div>
+
+
+
+
+    <a class="shang_close" href="javascript:void(0)" onClick="dashangToggle()" title="关闭"><img src="/public/img/太阳.png" alt="取消" /></a>
+    <img class="shang_logo" src="/public/img/太阳.png" alt="金林苑" />
+    dddd
+
+</div>
+<button class="dashang" onClick="dashangToggle()">点击登录</button>
+<div id="gray">22222</div>
+
+<div class="popup" id="popup">
+    sdafas
+</div>
+<hr>
+
+
+
+<div id="div_body">
+    <input type="text" class="layui-input store_Address" style="width:400px;" maxlength="300" name="Address" onclick="divtoshow()" id="address" placeholder="详细至门牌号, 与营业执照地址一致" />
+</div>
+
+
+<div id="div_show"> </div>
+
+
+<footer style="text-align: center;">
+    <p>&copy; 2018 - Go抽奖系统</p>
+    sib8n51RbK4fOA5T6lupkjmmk0FRavlk
+</footer>
+</body>
+<script>
+    $(function(){
+
+    })
+</script>
+</html>
